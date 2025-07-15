@@ -1,11 +1,6 @@
 from django.conf import settings
 from django.db import models
 
-# Create your models here.
-from django.db import models
-
-# Create your models here.
-# In your_project_folder/models.py
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.utils.translation import gettext_lazy as _

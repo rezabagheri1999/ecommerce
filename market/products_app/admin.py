@@ -8,7 +8,8 @@ class ProductInline(admin.TabularInline):
 
 class CategoryAdmin(admin.ModelAdmin):
     inlines = [ProductInline]
-    list_display = ('name','is_active')
+    list_display = ('name','is_active','parent')
+    list_filter = ('parent',)
     prepopulated_fields = {'slug':('name',)}
 
 

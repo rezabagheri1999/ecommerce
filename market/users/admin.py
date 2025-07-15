@@ -4,6 +4,13 @@ from .models import User,UserProfile,ContactMessage
 admin.site.register(UserProfile)
 # admin.site.register(ContactMessage)
 
+class UserAdmin(admin.ModelAdmin):
+    list_display = ['__str__','username']
+
+    class Meta:
+        model = User
+
+
 class ContactMessageAdmin(admin.ModelAdmin):
     list_display = ['__str__','name','subject','is_read']
 

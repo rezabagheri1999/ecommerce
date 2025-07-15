@@ -4,9 +4,16 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+from products_app.models import Category ,Product
 
 def header_sec(request):
+    products = Product.objects.all()
+    categories = Category.objects.all()
+    parent = Category.objects.filter(parent = None)
     context = {
+        'categories':categories,
+        'parent':parent,
+        'products':products
 
     }
     return render(request,'base/Header.html' ,context)

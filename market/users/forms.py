@@ -52,6 +52,13 @@ class ProfileCompletionForm(forms.ModelForm):
         if not re.match(r'^\+?1?\d{9,15}$', phone_number):
             raise ValidationError("Enter a valid phone number.")
         return phone_number
+
+
+
+
+
+
+
 #Editing Register form
 class ProfileEditForm(forms.ModelForm):
     class Meta:

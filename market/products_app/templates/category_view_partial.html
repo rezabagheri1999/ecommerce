@@ -1,0 +1,20 @@
+<div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingOne">
+                                        <button class="accordion-button py-2 px-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                            گروه های محصولات
+                                        </button>
+                                    </h2>
+                                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            {% for category in categories %}
+                                                {% if category.parent == None %}
+                                            <div class="form-group">
+                                                <input type="checkbox" id="category1">
+                                                <label for="category1">{{category.name}}</label>
+                                            </div>
+                                                {% endif %}
+                                            {% endfor %}
+
+                                        </div>
+                                    </div>
+                                </div>

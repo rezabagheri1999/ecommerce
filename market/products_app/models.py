@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 # Create your models here.
@@ -6,7 +7,6 @@ from django.db import models
 from django.utils.text import slugify
 from django.urls import reverse
 
-from market.settings import AUTH_USER_MODEL
 from django.conf import settings
 
 
@@ -16,6 +16,7 @@ User = get_user_model()
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
     slug = models.SlugField(max_length=100, unique=True, blank=True)
     description = models.TextField(blank=True)
     is_active = models.BooleanField(default=True)
@@ -56,9 +57,12 @@ class ProductColor(models.Model):
 
 # Product
 
+
+
 class Product(models.Model):
     name = models.CharField(max_length=200,unique=True)
     slug = models.SlugField(max_length=200, unique=True, blank=True)
+    short_description = models.TextField()
     description = models.TextField()
     category = models.ForeignKey(
         Category,
@@ -99,7 +103,63 @@ class Product(models.Model):
         return self.discount_price is not None and self.discount_price < self.price
 
     def get_current_price(self):
-        return self.discount_price if self.is_on_sale() else self.price
+        return self.discount_price - self.discount_price if self.is_on_sale() else self.price
+
+    def current_price(self):
+        """Property alias for templates"""
+        return self.get_current_price()
+    @property
+    def get_savings(self):
+        """Calculate savings amount"""
+        if self.is_on_sale():
+            return round(self.price - self.discount_price)
+        return 0
+
+    @property
+    def get_savings_percentage(self):
+        """Returns the percentage saved"""
+        if self.is_on_sale():
+            savings = float(self.price) - float(self.discount_price)
+            return 100 - round((savings / float(self.price)) * 100)
+        return 0
+
+    RATING_CHOICES = [
+        (0.0, 'No rating'),
+        (0.5, '0.5'),
+        (1.0, '1.0'),
+        (1.5, '1.5'),
+        (2.0, '2.0'),
+        (2.5, '2.5'),
+        (3.0, '3.0'),
+        (3.5, '3.5'),
+        (4.0, '4.0'),
+        (4.5, '4.5'),
+        (5.0, '5.0'),
+    ]
+
+    rating = models.FloatField(
+        choices=RATING_CHOICES,
+        default=0.0,
+        help_text="Select product rating (0.5 to 5.0)"
+    )
+
+
+    # def get_star_rating(self):
+    #     """Generate star display data"""
+    #     full_stars = int(self.rating %1)
+    #     has_half_star = (self.rating % 1) >= 0.5
+    #     empty_stars = 5 - full_stars - (1 if has_half_star else 0)
+    #     return {
+    #         'full_stars': full_stars,
+    #         'has_half_star': has_half_star,
+    #         'empty_stars': empty_stars,
+    #         'rating': self.rating,
+    #         'count': self.rating_count
+    #     }
+
+
+
+
 
 
 # PorductImage
